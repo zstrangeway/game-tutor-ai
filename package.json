@@ -1,12 +1,17 @@
 {
-  "name": "shadcn-ui-monorepo",
+  "name": "game-tutor-ai",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "lint:fix": "turbo lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "turbo test",
+    "test:cov": "turbo test:cov",
+    "typecheck": "turbo typecheck",
+    "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

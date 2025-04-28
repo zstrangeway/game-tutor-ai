@@ -27,7 +27,6 @@
 
 ### Multiplayer
 - `/lobby` - Multiplayer game lobby and matchmaking
-- `/lobby/[gameType]` - Game-specific lobby (e.g., `/lobby/chess`)
 
 ### Additional Pages
 - `/learn` - Learning resources and daily tips

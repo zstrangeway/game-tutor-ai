@@ -3,27 +3,26 @@
 ## Week 1-2: Project Setup & Core Architecture
 
 ### Repository Setup
-- [ ] Create the `game-tutor-ai` monorepo in GitHub
-- [ ] Set up the project structure (apps/plydojo, packages/game-api, packages/components)
-- [ ] Configure Typescript compiler options for each package
-- [ ] Setup ESLint and Prettier for code quality
-- [ ] Create basic README.md and documentation structure
-- [ ] Configure GitHub Actions for CI/CD pipeline
+- [x] Create the `game-tutor-ai` monorepo in GitHub
+- [x] Set up the project structure (apps/plydojo, packages/game-api, packages/components)
+- [x] Configure Typescript compiler options for each package
+- [x] Setup ESLint and Prettier for code quality
+- [x] Create basic README.md and documentation structure
+- [x] Configure GitHub Actions for CI/CD pipeline
 
 ### Environment & Infrastructure
-- [ ] Configure environment variables setup (.env files)
-- [ ] Install core dependencies for each package
-- [ ] Set up package.json scripts for development, building, and testing
-- [ ] Set up Vercel projects for frontend and backend deployments
+- [x] Configure environment variables setup (.env files)
+- [x] Set up package.json scripts for development, building, and testing
+- [x] Set up Vercel projects for frontend and backend deployments
 - [ ] Configure Supabase project and access credentials
-- [ ] Register the plydojo.ai domain
+- [ ] Register the plydojo.ai domain - POSTPONED
 
 ### Initial Components & API Structure (Parallel)
-- [ ] Backend: Set up Nest.js application structure
+- [x] Backend: Set up Nest.js application structure
 - [ ] Backend: Configure initial API routes
-- [ ] Frontend: Set up Next.js application structure
+- [x] Frontend: Set up Next.js application structure
 - [ ] Frontend: Create initial page routing
-- [ ] Components: Establish shared component library structure
+- [x] Components: Establish shared component library structure
 
 ## Week 3-5: Core Functionality Development (Parallel)
 
