@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+<!-- These rules help Cursor decide where to store files. -->
+
+- All shared UI components should be created in ./packages/ui/src/components. Use atomic deisng principles to determine if it is an atom, molecule, organism or template and place it in the corresponding folder.
+- All types should live in ./packages/ui/src/types.

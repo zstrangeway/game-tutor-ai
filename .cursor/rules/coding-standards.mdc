@@ -1,0 +1,7 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+- Prefer vanilla shadcn components whenever possible.  Custom components should be extrememly rare.  No unicorns.
+- Limit file sizes to roughly 200 lines.  Consider refactoring if it gets too far beyond that.  Use discretion.
