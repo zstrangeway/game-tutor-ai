@@ -11,7 +11,15 @@
     "test": "turbo test",
     "test:cov": "turbo test:cov",
     "typecheck": "turbo typecheck",
-    "clean": "turbo clean && rm -rf node_modules"
+    "clean": "turbo clean && rm -rf node_modules",
+    "db:generate": "turbo db:generate --filter=game-api",
+    "db:migrate": "turbo db:migrate --filter=game-api",
+    "db:seed": "turbo db:seed --filter=game-api",
+    "db:reset": "turbo db:reset --filter=game-api",
+    "docker:db:up": "docker compose up -d postgres",
+    "docker:db:down": "docker compose down",
+    "docker:db:logs": "docker compose logs -f postgres",
+    "docker:db:restart": "docker compose restart postgres"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

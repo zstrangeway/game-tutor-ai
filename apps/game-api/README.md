@@ -96,3 +96,107 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Database Setup with Prisma
+
+This project uses Prisma ORM to interact with the PostgreSQL database. 
+
+### Option 1: Using Docker (Recommended)
+
+We provide a Docker Compose setup at the root of the repository to make database setup easy:
+
+1. Start the PostgreSQL database container:
+
+```bash
+# From project root
+pnpm docker:db:up
+```
+
+2. Create a `.env` file in the `apps/game-api` directory with the following connection string:
+
+```
+DATABASE_URL="postgresql://postgres:postgres@localhost:5433/gametutor?schema=public"
+```
+
+3. Generate the Prisma client:
+
+```bash
+# From project root
+pnpm db:generate
+
+# Or from apps/game-api directory
+pnpm db:generate
+```
+
+4. Run migrations to set up the database schema:
+
+```bash
+# From project root
+pnpm db:migrate
+
+# Or from apps/game-api directory
+pnpm db:migrate
+```
+
+5. Seed the database with initial data:
+
+```bash
+# From project root
+pnpm db:seed
+
+# Or from apps/game-api directory
+pnpm db:seed
+```
+
+### Option 2: Using your own PostgreSQL instance
+
+If you prefer to use your own PostgreSQL instance:
+
+1. Create a `.env` file in the `apps/game-api` directory with your database connection string:
+
+```
+DATABASE_URL="postgresql://username:password@localhost:5432/gametutor"
+```
+
+Then follow steps 3-5 from Option 1.
+
+### Database Management Commands
+
+If you need to reset the database (WARNING: this will delete all data):
+
+```bash
+# From project root
+pnpm db:reset
+
+# Or from apps/game-api directory
+pnpm db:reset
+```
+
+Docker-specific commands (run from the project root):
+
+```bash
+# Start the database
+pnpm docker:db:up
+
+# Stop the database
+pnpm docker:db:down
+
+# View database logs
+pnpm docker:db:logs
+
+# Restart the database
+pnpm docker:db:restart
+```
+
+## Available Scripts
+
+```bash
+# development
+$ pnpm run start
+
+# watch mode
+$ pnpm run start:dev
+
+# production mode
+$ pnpm run start:prod
+```

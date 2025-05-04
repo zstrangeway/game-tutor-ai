@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Body } from '@nestjs/common';
+import { Controller, Get, Put, Body, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -23,5 +23,11 @@ export class UsersController {
   @Get('me/stats')
   getStats() {
     return this.usersService.getStats();
+  }
+
+  // Example of a route that gets a user by ID using Prisma
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    return this.usersService.findById(id);
   }
 }

@@ -9,9 +9,11 @@ import { AiModule } from './ai/ai.module';
 import { MultiplayerModule } from './multiplayer/multiplayer.module';
 import { ChatModule } from './chat/chat.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
+    PrismaModule,
     AuthModule,
     UsersModule,
     GamesModule,
