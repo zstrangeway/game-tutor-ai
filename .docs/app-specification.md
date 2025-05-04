@@ -54,7 +54,7 @@ GameTutorAI is a SaaS platform for learning games via AI-powered opponents that 
 ### 4.1 game-api (Backend)
 - **Framework**: Nest.js with TypeScript.
 - **URL**: game-api.vercel.app (internal).
-- **Repo**: game-tutor-ai/packages/game-api.
+- **Repo**: game-tutor-ai/apps/game-api.
 - **GameEngine**: Game logic (Chess.js/Stockfish.js for chess), extensible interfaces (`validateMove`, `generatePuzzle`, `getFeedback`).
 - **Multiplayer**: Supabase queue for matchmaking, Socket.IO for real-time moves and player chat, Elo updates.
 - **AI Opponent**: GPT-4o-mini for moves and unlimited feedback as chat messages (Premium only, solo/tutoring mode).

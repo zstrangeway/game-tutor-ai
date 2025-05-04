@@ -4,7 +4,7 @@
 
 ### Repository Setup
 - [x] Create the `game-tutor-ai` monorepo in GitHub
-- [x] Set up the project structure (apps/plydojo, packages/game-api, packages/components)
+- [x] Set up the project structure (apps/plydojo, apps/game-api, packages/components)
 - [x] Configure Typescript compiler options for each package
 - [x] Setup ESLint and Prettier for code quality
 - [x] Create basic README.md and documentation structure
