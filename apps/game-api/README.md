@@ -200,3 +200,103 @@ $ pnpm run start:dev
 # production mode
 $ pnpm run start:prod
 ```
+
+# GameTutorAI API
+
+Backend API for the GameTutorAI platform.
+
+## Authentication and User Management
+
+The authentication and user management system is production-ready with the following features:
+
+- Secure password hashing with bcrypt
+- JWT-based authentication with proper secret management
+- Email verification flow
+- Password reset functionality
+- Rate limiting for security-sensitive endpoints
+- Comprehensive error handling and logging
+- User profile management
+
+## Setup Instructions
+
+### 1. Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/gametutor?schema=public"
+
+# JWT
+JWT_SECRET="your-secure-jwt-secret-minimum-32-chars"
+JWT_EXPIRES_IN="1d"
+
+# CORS
+CORS_ORIGIN="https://plydojo.ai"
+
+# Application
+PORT=3001
+NODE_ENV="development"
+```
+
+For production, use secure environment variables with proper secrets management.
+
+### 2. Database Setup
+
+Run database migrations and seed:
+
+```bash
+npm run db:generate
+npm run db:migrate
+npm run db:push
+npm run db:seed
+```
+
+### 3. Development
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+### 4. Production Deployment
+
+Build and start the production server:
+
+```bash
+npm run build
+npm run start:prod
+```
+
+## Authentication Endpoints
+
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login with email and password
+- `POST /api/auth/verify` - Verify email address with token
+- `POST /api/auth/reset-password` - Request password reset
+- `PUT /api/auth/reset-password` - Complete password reset
+
+## User Management Endpoints
+
+- `GET /api/users/me` - Get current user profile
+- `PUT /api/users/me` - Update user profile
+- `PUT /api/users/me/preferences` - Update user preferences
+- `GET /api/users/me/stats` - Get user statistics
+
+## Security Features
+
+- Rate limiting to prevent brute force attacks
+- JWT token expiration and validation
+- Safe password reset flow with time-limited tokens
+- Email verification
+- Encryption of sensitive information
+- Proper error handling that doesn't leak sensitive information
+
+## Testing
+
+Run tests with:
+
+```bash
+npm test
+```

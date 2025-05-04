@@ -14,16 +14,22 @@ datasource db {
 }
 
 model User {
-  id                 String       @id @default(uuid())
-  email              String       @unique
-  username           String       @unique
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
-  elo                Json         @default("{}") // JSONB, e.g., {'chess': 800}
-  preferences        Json         @default("{}") // JSONB
-  subscriptionStatus String?
-  gamePlayers        GamePlayer[]
-  chatMessages       ChatLog[]
+  id                  String               @id @default(uuid())
+  email               String               @unique
+  username            String               @unique
+  password            String // Added secure password storage
+  isVerified          Boolean              @default(false)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  elo                 Json                 @default("{}") // JSONB, e.g., {'chess': 800}
+  preferences         Json                 @default("{}") // JSONB
+  subscriptionStatus  String?
+  gamePlayers         GamePlayer[]
+  chatMessages        ChatLog[]
+  verificationTokens  VerificationToken[]
+  passwordResetTokens PasswordResetToken[]
+  refreshTokens       RefreshToken[]
+  tokenBlacklist      TokenBlacklist[]
 }
 
 model Game {
@@ -77,4 +83,40 @@ model AnalyticsEvent {
   eventType String
   metadata  Json     @default("{}")
   createdAt DateTime @default(now())
+}
+
+model VerificationToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TokenBlacklist {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
