@@ -10,6 +10,7 @@ import { MultiplayerModule } from './multiplayer/multiplayer.module';
 import { ChatModule } from './chat/chat.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { TerminusModule } from '@nestjs/terminus';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PrismaModule } from './prisma/prisma.module';
     MultiplayerModule,
     ChatModule,
     AnalyticsModule,
+    TerminusModule,
   ],
   controllers: [AppController],
   providers: [AppService],
