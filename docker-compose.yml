@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:16
-    container_name: gametutor-db
+    image: postgres:16-alpine
+    container_name: postgres
     ports:
       - "5433:5432"
     environment:
@@ -18,7 +18,52 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    networks:
+      - gametutor-network
+
+  game-api:
+    container_name: game-api
+    build:
+      context: .
+      dockerfile: ./apps/game-api/Dockerfile
+    ports:
+      - "3001:3001"
+    env_file: 
+      - ./apps/game-api/.env
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/apps/game-api/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - gametutor-network
+
+  plydojo-web:
+    container_name: plydojo-web
+    build: 
+      context: .
+      dockerfile: ./apps/plydojo-web/Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./apps/plydojo-web/.env
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/apps/plydojo-web/node_modules
+      - /app/apps/plydojo-web/.next
+    depends_on:
+      - postgres
+      - game-api
+    networks:
+      - gametutor-network
 
 volumes:
   postgres_data:
-    name: gametutor-postgres-data 
+    name: gametutor-postgres-data
+
+networks:
+  gametutor-network:
+    name: gametutor-network

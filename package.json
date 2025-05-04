@@ -16,10 +16,10 @@
     "db:migrate": "turbo db:migrate --filter=game-api",
     "db:seed": "turbo db:seed --filter=game-api",
     "db:reset": "turbo db:reset --filter=game-api",
-    "docker:db:up": "docker compose up -d postgres",
-    "docker:db:down": "docker compose down",
-    "docker:db:logs": "docker compose logs -f postgres",
-    "docker:db:restart": "docker compose restart postgres"
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:restart": "docker compose restart"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
