@@ -1,0 +1,14 @@
+---
+description: 
+globs: apps/plydojo-web/**/*.*,packages/ui/**/*.*
+alwaysApply: false
+---
+---
+Description: Specifies the usage of Shadcn UI, Radix, Tailwind Aria for UI components and styling within the project.
+globs: apps/plydojo-web/**/*.*, packages/ui/**/*.*
+---
+- Use Shadcn UI, Radix, and Tailwind Aria for components and styling
+- Implement responsive design with Tailwind CSS; use a mobile-first approach
+- Prefer theme-color names over hard-codeded colors
+- All shadcn components live in the component library: packages/ui
+- Follow Atomic design pricinples

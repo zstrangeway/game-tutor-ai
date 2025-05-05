@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+Description: Enforces the use of turboscript for monorepo management
+---
+
+- Prefer to run commands from the root of the project
+- Add tasks to allow for running of common/shared tasks in packages in parallel

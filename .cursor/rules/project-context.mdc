@@ -1,7 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: true
----
-
-- refer to `./.docs/* ` to ensure you have context on our project goals.
