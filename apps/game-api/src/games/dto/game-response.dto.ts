@@ -8,7 +8,10 @@ export class GamePlayerDto {
   @ApiProperty({ description: 'Unique identifier for the player' })
   id: string;
 
-  @ApiProperty({ description: 'User ID of the player, null for AI players', required: false })
+  @ApiProperty({
+    description: 'User ID of the player, null for AI players',
+    required: false,
+  })
   userId?: string;
 
   @ApiProperty({ description: 'Whether the player is an AI' })
@@ -17,9 +20,9 @@ export class GamePlayerDto {
   @ApiProperty({ description: 'Player role (e.g., white, black)' })
   role: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Additional metadata for the player',
-    example: { difficulty: 'beginner', drawOffered: false } 
+    example: { difficulty: 'beginner', drawOffered: false },
   })
   metadata: Record<string, unknown>;
 }
@@ -34,7 +37,10 @@ export class GameStateDto {
   @ApiProperty({ description: 'The current game state (engine-specific)' })
   state: Record<string, unknown>;
 
-  @ApiProperty({ description: 'List of players in the game', type: [GamePlayerDto] })
+  @ApiProperty({
+    description: 'List of players in the game',
+    type: [GamePlayerDto],
+  })
   players: GamePlayerDto[];
 
   @ApiProperty({ description: 'Result of the game if ended', required: false })
@@ -49,13 +55,22 @@ export class GameStateDto {
   @ApiProperty({ description: 'List of moves made in the game' })
   moves: string[];
 
-  @ApiProperty({ description: 'The last move made in the game', required: false })
+  @ApiProperty({
+    description: 'The last move made in the game',
+    required: false,
+  })
   lastMove?: string;
 
-  @ApiProperty({ description: 'Whether a draw has been offered', required: false })
+  @ApiProperty({
+    description: 'Whether a draw has been offered',
+    required: false,
+  })
   drawOffered?: boolean;
 
-  @ApiProperty({ description: 'Which player offered a draw (role)', required: false })
+  @ApiProperty({
+    description: 'Which player offered a draw (role)',
+    required: false,
+  })
   drawOfferedBy?: string;
 }
 

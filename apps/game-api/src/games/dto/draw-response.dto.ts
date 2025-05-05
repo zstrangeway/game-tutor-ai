@@ -7,7 +7,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class DrawResponseDto {
   @ApiProperty({
     description: 'Whether to accept the draw offer',
-    example: true
+    example: true,
   })
   @IsBoolean()
   accept: boolean;

@@ -28,7 +28,7 @@ export class CreateGameDto {
   @ApiProperty({
     description: 'Type of game to create',
     enum: GameType,
-    example: GameType.CHESS
+    example: GameType.CHESS,
   })
   @IsEnum(GameType)
   gameType: GameType;
@@ -36,7 +36,7 @@ export class CreateGameDto {
   @ApiProperty({
     description: 'Type of opponent to play against',
     enum: OpponentType,
-    example: OpponentType.AI
+    example: OpponentType.AI,
   })
   @IsEnum(OpponentType)
   opponentType: OpponentType;
@@ -45,7 +45,7 @@ export class CreateGameDto {
     description: 'Difficulty level of AI opponent',
     enum: GameDifficulty,
     example: GameDifficulty.BEGINNER,
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsEnum(GameDifficulty)
@@ -56,7 +56,7 @@ export class CreateGameDto {
     enum: TimeControl,
     example: TimeControl.UNTIMED,
     required: false,
-    default: TimeControl.UNTIMED
+    default: TimeControl.UNTIMED,
   })
   @IsOptional()
   @IsEnum(TimeControl)

@@ -17,6 +17,7 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { EmailModule } from './common/email.module';
+import { LoggerModule } from './common/logger.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { EmailModule } from './common/email.module';
 
     // Common modules
     EmailModule,
+    LoggerModule,
 
     // Feature modules
     AuthModule,

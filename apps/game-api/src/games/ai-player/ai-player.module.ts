@@ -12,4 +12,4 @@ import { PrismaModule } from '../../prisma/prisma.module';
   providers: [AiPlayerService],
   exports: [AiPlayerService],
 })
-export class AiPlayerModule {} 
+export class AiPlayerModule {}

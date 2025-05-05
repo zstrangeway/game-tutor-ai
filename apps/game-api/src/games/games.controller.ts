@@ -31,15 +31,12 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
-import { 
-  GameNotFoundException, 
-  PlayerNotInGameException,
-  GameEndedException,
-  NotPlayerTurnException,
-  InvalidMoveException,
-  NoDrawOfferedException,
-  PremiumFeatureException 
-} from './exceptions/games.exceptions';
+
+// Define error interface for better error handling
+interface ErrorWithMessage {
+  message: string;
+  stack?: string;
+}
 
 // Define the type for the authenticated request
 interface RequestWithUser extends Request {
@@ -56,7 +53,7 @@ interface RequestWithUser extends Request {
 @UseGuards(JwtAuthGuard)
 export class GamesController {
   private readonly logger = new Logger(GamesController.name);
-  
+
   constructor(private readonly gamesService: GamesService) {}
 
   @Post('new')
@@ -219,12 +216,13 @@ export class GamesController {
    * @param defaultMessage - Default message if error type is unknown
    * @throws HttpException with appropriate status
    */
-  private handleError(error: any, defaultMessage: string): never {
+  private handleError(error: unknown, defaultMessage: string): never {
     if (error instanceof HttpException) {
       throw error;
     }
-    
-    this.logger.error(`${defaultMessage}: ${error.message}`, error.stack);
+
+    const err = error as ErrorWithMessage;
+    this.logger.error(`${defaultMessage}: ${err.message}`, err.stack);
     throw new InternalServerErrorException(defaultMessage);
   }
 }

@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 describe('AppController', () => {
-  // Use let _appController to indicate it might be used later
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let _appController: AppController;
 
   beforeEach(async () => {

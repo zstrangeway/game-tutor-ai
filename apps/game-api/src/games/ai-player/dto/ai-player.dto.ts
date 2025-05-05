@@ -15,26 +15,26 @@ export enum AiDifficulty {
 export class AiPlayerDto {
   @ApiProperty({
     description: 'Unique identifier for the AI player',
-    example: '734399fb-b601-4673-9dd9-d62d0993b534'
+    example: '734399fb-b601-4673-9dd9-d62d0993b534',
   })
   id: string;
 
   @ApiProperty({
     description: 'Name of the AI player',
-    example: 'Beginner Bot'
+    example: 'Beginner Bot',
   })
   name: string;
 
   @ApiProperty({
     description: 'Difficulty level of the AI player',
     enum: AiDifficulty,
-    example: AiDifficulty.BEGINNER
+    example: AiDifficulty.BEGINNER,
   })
   difficulty: AiDifficulty | string;
 
   @ApiProperty({
     description: 'Description of the AI player',
-    example: 'An easy opponent suitable for beginners'
+    example: 'An easy opponent suitable for beginners',
   })
   description: string;
-} 
+}

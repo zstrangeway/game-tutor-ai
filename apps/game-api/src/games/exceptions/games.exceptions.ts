@@ -62,4 +62,4 @@ export class PremiumFeatureException extends HttpException {
   constructor(message = 'This feature requires a paid subscription') {
     super(message, HttpStatus.PAYMENT_REQUIRED);
   }
-} 
+}

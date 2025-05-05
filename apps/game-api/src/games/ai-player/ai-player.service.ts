@@ -24,6 +24,14 @@ interface AiPlayerFilters {
 }
 
 /**
+ * Interface for error handling with proper typing
+ */
+interface ErrorWithMessage {
+  message: string;
+  stack?: string;
+}
+
+/**
  * Service for managing AI players
  */
 @Injectable()
@@ -38,12 +46,14 @@ export class AiPlayerService {
    * @returns Array of AI players
    */
   async findAll(difficulty?: string): Promise<AiPlayerDto[]> {
-    this.logger.debug(`Finding AI players with difficulty: ${difficulty || 'ANY'}`);
-    
+    this.logger.debug(
+      `Finding AI players with difficulty: ${difficulty || 'ANY'}`,
+    );
+
     try {
       // Create base where clause for AI players
       const where: AiPlayerFilters = { isAi: true };
-      
+
       // We'll filter the difficulty after fetching since the metadata is stored as JSONB
       const aiPlayers = await this.prisma.gamePlayer.findMany({
         where,
@@ -52,23 +62,28 @@ export class AiPlayerService {
           metadata: true,
         },
       });
-      
+
       // Transform the results to a more user-friendly format
-      const formattedPlayers = aiPlayers.map(player => this.formatAiPlayer(player));
-      
+      const formattedPlayers = aiPlayers.map((player) =>
+        this.formatAiPlayer(player),
+      );
+
       // Filter by difficulty if provided
       let filteredPlayers = formattedPlayers;
       if (difficulty) {
         const upperDifficulty = difficulty.toUpperCase();
         filteredPlayers = formattedPlayers.filter(
-          player => (player.difficulty as string).toUpperCase() === upperDifficulty
+          (player) => player.difficulty.toUpperCase() === upperDifficulty,
         );
       }
-      
-      this.logger.debug(`Found ${filteredPlayers.length} AI players matching criteria`);
+
+      this.logger.debug(
+        `Found ${filteredPlayers.length} AI players matching criteria`,
+      );
       return filteredPlayers;
     } catch (error) {
-      this.logger.error(`Error finding AI players: ${error.message}`, error.stack);
+      const err = error as ErrorWithMessage;
+      this.logger.error(`Error finding AI players: ${err.message}`, err.stack);
       throw error;
     }
   }
@@ -81,7 +96,7 @@ export class AiPlayerService {
    */
   async findOne(id: string): Promise<AiPlayerDto> {
     this.logger.debug(`Finding AI player with ID: ${id}`);
-    
+
     try {
       const aiPlayer = await this.prisma.gamePlayer.findUnique({
         where: { id },
@@ -91,34 +106,37 @@ export class AiPlayerService {
           metadata: true,
         },
       });
-      
+
       if (!aiPlayer || !aiPlayer.isAi) {
         this.logger.warn(`AI player not found with ID: ${id}`);
         throw new NotFoundException(`AI player not found with ID: ${id}`);
       }
-      
+
       // Transform to a more user-friendly format
       const formattedPlayer = this.formatAiPlayer(aiPlayer);
-      
+
       this.logger.debug(`Found AI player: ${formattedPlayer.name}`);
       return formattedPlayer;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      
-      this.logger.error(`Error finding AI player: ${error.message}`, error.stack);
+
+      const err = error as ErrorWithMessage;
+      this.logger.error(`Error finding AI player: ${err.message}`, err.stack);
       throw error;
     }
   }
-  
+
   /**
    * Helper method to format an AI player entity into a DTO
    * @param player - Game player entity
    * @returns Formatted AI player DTO
    */
-  private formatAiPlayer(player: Pick<GamePlayer, 'id' | 'metadata'>): AiPlayerDto {
-    const metadata = player.metadata as AiPlayerMetadata || {};
+  private formatAiPlayer(
+    player: Pick<GamePlayer, 'id' | 'metadata'>,
+  ): AiPlayerDto {
+    const metadata = (player.metadata as AiPlayerMetadata) || {};
     return {
       id: player.id,
       name: metadata.name || 'AI Player',
@@ -126,4 +144,4 @@ export class AiPlayerService {
       description: metadata.description || '',
     };
   }
-} 
+}

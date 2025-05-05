@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ChessEngine } from './engines/chess-engine';
 import {
@@ -39,17 +33,17 @@ interface PlayerMetadata {
   difficulty?: string;
   drawOffered?: boolean;
   drawOfferedBy?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
-// Type for game state mapping
-interface ChessGameState {
-  fen: () => string;
-  turn: () => 'w' | 'b';
-  inCheck: () => boolean;
-  isCheckmate: () => boolean;
-  history: () => string[];
+// Define a type for error objects
+interface ErrorWithMessage {
+  message: string;
+  stack?: string;
 }
+
+// Add ChessInstance type for better type safety
+type ChessInstance = Chess;
 
 /**
  * Service responsible for game-related operations
@@ -78,7 +72,7 @@ export class GamesService {
     );
 
     // Initialize the appropriate game engine based on game type
-    let initialState;
+    let initialState: ChessInstance;
     switch (createGameDto.gameType) {
       case GameType.CHESS:
         initialState = this.chessEngine.getInitialState();
@@ -119,7 +113,7 @@ export class GamesService {
           });
 
           this.logger.debug(`Game created with ID: ${game.id}`);
-          
+
           // Add the AI player
           const aiPlayer = await tx.gamePlayer.create({
             data: {
@@ -131,7 +125,7 @@ export class GamesService {
               },
             },
           });
-          
+
           this.logger.debug(`AI player created: ${JSON.stringify(aiPlayer)}`);
 
           // Reload the game with the AI player included
@@ -176,7 +170,8 @@ export class GamesService {
         return this.mapGameToDto(game);
       }
     } catch (error) {
-      this.logger.error(`Error creating game: ${error.message}`, error.stack);
+      const err = error as ErrorWithMessage;
+      this.logger.error(`Error creating game: ${err.message}`, err.stack);
       throw error;
     }
   }
@@ -238,7 +233,8 @@ export class GamesService {
         totalPages: Math.ceil(total / limit),
       };
     } catch (error) {
-      this.logger.error(`Error getting games: ${error.message}`, error.stack);
+      const err = error as ErrorWithMessage;
+      this.logger.error(`Error getting games: ${err.message}`, err.stack);
       throw error;
     }
   }
@@ -268,7 +264,7 @@ export class GamesService {
     userId: string,
   ): Promise<GameStateDto> {
     this.logger.debug(`User ${userId} submitting move "${move}" in game ${id}`);
-    
+
     const game = await this.findGameById(id, userId);
 
     // Check if game is already ended
@@ -284,8 +280,11 @@ export class GamesService {
       throw new PlayerNotInGameException();
     }
 
-    // Deserialize the game state
-    const gameState = this.chessEngine.deserializeState(game.state);
+    // Deserialize the game state with explicit typing
+    // Using our ChessInstance type to ensure type safety
+    const gameState = this.chessEngine.deserializeState(
+      game.state,
+    ) as unknown as ChessInstance;
 
     // Make sure it's the player's turn
     const currentTurn = gameState.turn() === 'w' ? 'white' : 'black';
@@ -303,10 +302,10 @@ export class GamesService {
     }
 
     const newState = this.chessEngine.applyMove(gameState, move);
-    
+
     // Check if the game has ended
     const endStatus = this.chessEngine.checkGameEnd(newState);
-    
+
     try {
       // Update the game in the database
       const updatedGame = await this.prisma.game.update({
@@ -322,15 +321,18 @@ export class GamesService {
 
       this.logger.debug(
         `Move "${move}" successfully applied in game ${id}${
-          endStatus.isEnded ? `, game ended with result: ${endStatus.result}` : ''
+          endStatus.isEnded
+            ? `, game ended with result: ${endStatus.result}`
+            : ''
         }`,
       );
 
       return this.mapGameToStateDto(updatedGame, newState);
     } catch (error) {
+      const err = error as ErrorWithMessage;
       this.logger.error(
-        `Error applying move ${move} in game ${id}: ${error.message}`,
-        error.stack,
+        `Error applying move ${move} in game ${id}: ${err.message}`,
+        err.stack,
       );
       throw error;
     }
@@ -344,7 +346,7 @@ export class GamesService {
    */
   async resignGame(id: string, userId: string): Promise<GameStateDto> {
     this.logger.debug(`User ${userId} resigning from game ${id}`);
-    
+
     const game = await this.findGameById(id, userId);
 
     // Check if game is already ended
@@ -379,12 +381,15 @@ export class GamesService {
         `User ${userId} (${player.role}) resigned game ${id}, result: ${result}`,
       );
 
-      const gameState = this.chessEngine.deserializeState(updatedGame.state);
+      const gameState = this.chessEngine.deserializeState(
+        updatedGame.state,
+      ) as unknown as ChessInstance;
       return this.mapGameToStateDto(updatedGame, gameState);
     } catch (error) {
+      const err = error as ErrorWithMessage;
       this.logger.error(
-        `Error resigning game ${id}: ${error.message}`,
-        error.stack,
+        `Error resigning game ${id}: ${err.message}`,
+        err.stack,
       );
       throw error;
     }
@@ -398,7 +403,7 @@ export class GamesService {
    */
   async offerDraw(id: string, userId: string): Promise<GameStateDto> {
     this.logger.debug(`User ${userId} offering draw in game ${id}`);
-    
+
     const game = await this.findGameById(id, userId);
 
     // Check if game is already ended
@@ -440,12 +445,15 @@ export class GamesService {
         `Draw offered by user ${userId} (${player.role}) in game ${id}`,
       );
 
-      const gameState = this.chessEngine.deserializeState(updatedGame.state);
+      const gameState = this.chessEngine.deserializeState(
+        updatedGame.state,
+      ) as unknown as ChessInstance;
       return this.mapGameToStateDto(updatedGame, gameState);
     } catch (error) {
+      const err = error as ErrorWithMessage;
       this.logger.error(
-        `Error offering draw in game ${id}: ${error.message}`,
-        error.stack,
+        `Error offering draw in game ${id}: ${err.message}`,
+        err.stack,
       );
       throw error;
     }
@@ -464,9 +472,9 @@ export class GamesService {
     userId: string,
   ): Promise<GameStateDto> {
     this.logger.debug(
-      `User ${userId} responding to draw offer in game ${id}, accept: ${accept}`,
+      `User ${userId} ${accept ? 'accepting' : 'rejecting'} draw in game ${id}`,
     );
-    
+
     const game = await this.findGameById(id, userId);
 
     // Check if game is already ended
@@ -475,31 +483,44 @@ export class GamesService {
       throw new GameEndedException();
     }
 
-    // Find the player responding to draw
+    // Find the player responding to the draw
     const player = game.gamePlayers.find((p) => p.userId === userId);
     if (!player) {
       this.logger.warn(`User ${userId} is not a player in game ${id}`);
       throw new PlayerNotInGameException();
     }
 
-    // Check if a draw was offered
-    const drawOfferedBy = game.gamePlayers.find((p) => {
-      const metadata = p.metadata as Record<string, any>;
-      return metadata?.drawOffered && metadata?.drawOfferedBy !== player.role;
+    // Check if draw was offered
+    const drawOffered = game.gamePlayers.some((p) => {
+      const metadata = p.metadata as PlayerMetadata;
+      return Boolean(metadata?.drawOffered);
     });
 
-    if (!drawOfferedBy) {
-      this.logger.warn(`No draw has been offered in game ${id}`);
+    if (!drawOffered) {
+      this.logger.warn(`No draw was offered in game ${id}`);
+      throw new NoDrawOfferedException();
+    }
+
+    // Find opponent who offered the draw
+    const opponent = game.gamePlayers.find((p) => {
+      const metadata = p.metadata as PlayerMetadata;
+      return p.id !== player.id && Boolean(metadata?.drawOffered);
+    });
+
+    if (!opponent) {
+      this.logger.warn(
+        `Could not find opponent who offered draw in game ${id}`,
+      );
       throw new NoDrawOfferedException();
     }
 
     try {
       if (accept) {
-        // Accept the draw - update the game in a transaction
+        // Accept the draw: update the game result to 'draw'
         const updatedGame = await this.prisma.game.update({
           where: { id },
           data: {
-            result: '1/2-1/2',
+            result: 'draw',
             gamePlayers: {
               updateMany: {
                 where: { gameId: id },
@@ -521,7 +542,9 @@ export class GamesService {
           `Draw accepted by user ${userId} (${player.role}) in game ${id}`,
         );
 
-        const gameState = this.chessEngine.deserializeState(updatedGame.state);
+        const gameState = this.chessEngine.deserializeState(
+          updatedGame.state,
+        ) as unknown as ChessInstance;
         return this.mapGameToStateDto(updatedGame, gameState);
       } else {
         // Reject the draw
@@ -549,13 +572,16 @@ export class GamesService {
           `Draw rejected by user ${userId} (${player.role}) in game ${id}`,
         );
 
-        const gameState = this.chessEngine.deserializeState(updatedGame.state);
+        const gameState = this.chessEngine.deserializeState(
+          updatedGame.state,
+        ) as unknown as ChessInstance;
         return this.mapGameToStateDto(updatedGame, gameState);
       }
     } catch (error) {
+      const err = error as ErrorWithMessage;
       this.logger.error(
-        `Error responding to draw in game ${id}: ${error.message}`,
-        error.stack,
+        `Error responding to draw in game ${id}: ${err.message}`,
+        err.stack,
       );
       throw error;
     }
@@ -581,19 +607,22 @@ export class GamesService {
    * @throws GameNotFoundException if game not found
    * @throws UnauthorizedException if user doesn't have access
    */
-  private async findGameById(id: string, userId: string): Promise<GameWithPlayers> {
+  private async findGameById(
+    id: string,
+    userId: string,
+  ): Promise<GameWithPlayers> {
     this.logger.debug(`Looking for game with ID: ${id} for user: ${userId}`);
-    
+
     // First try to find the game without user check to see if it exists at all
     const gameExists = await this.prisma.game.findUnique({
       where: { id },
     });
-    
+
     if (!gameExists) {
       this.logger.warn(`Game with ID ${id} not found`);
       throw new GameNotFoundException(id);
     }
-    
+
     // Now check if the user is a player in this game
     const gameWithPlayers = await this.prisma.game.findUnique({
       where: { id },
@@ -601,22 +630,22 @@ export class GamesService {
         gamePlayers: true,
       },
     });
-    
+
     if (!gameWithPlayers) {
       this.logger.warn(`Game with ID ${id} not found with players`);
       throw new GameNotFoundException(id);
     }
-    
+
     // Check if the user is a player in this game (more permissive check)
     const isPlayer = gameWithPlayers.gamePlayers.some(
       (player) => player.userId === userId || player.userId === null, // Allow AI games
     );
-    
+
     if (!isPlayer) {
       this.logger.warn(`User ${userId} doesn't have access to game ${id}`);
       throw new PlayerNotInGameException();
     }
-    
+
     return gameWithPlayers;
   }
 
@@ -660,16 +689,15 @@ export class GamesService {
    */
   private mapGameToStateDto(
     game: GameWithPlayers,
-    gameState: Chess,
+    gameState: ChessInstance,
   ): GameStateDto {
     const playerWithDrawOffer = game.gamePlayers.find((player) => {
       const metadata = player.metadata as PlayerMetadata;
       return Boolean(metadata?.drawOffered);
     });
-    
+
     const drawOfferedByValue = playerWithDrawOffer
-      ? ((playerWithDrawOffer.metadata as PlayerMetadata)
-          ?.drawOfferedBy as string | undefined)
+      ? (playerWithDrawOffer.metadata as PlayerMetadata)?.drawOfferedBy
       : undefined;
 
     // Create a safe object with just the properties we need
@@ -678,7 +706,7 @@ export class GamesService {
       turn: gameState.turn(),
       inCheck: gameState.inCheck(),
       isCheckmate: gameState.isCheckmate(),
-      history: gameState.history()
+      history: gameState.history(),
     };
 
     return {

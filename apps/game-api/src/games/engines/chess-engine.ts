@@ -22,7 +22,8 @@ export class ChessEngine implements GameEngine<ChessInstance> {
       // Try to make the move
       const result = chessCopy.move(move);
       return result !== null;
-    } catch (_) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       // Ignore any errors and return false for invalid moves
       return false;
     }
@@ -43,7 +44,8 @@ export class ChessEngine implements GameEngine<ChessInstance> {
       // Apply the move
       chess.move(move);
       return chess;
-    } catch (_) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       throw new Error(`Invalid move: ${move}`);
     }
   }
@@ -121,11 +123,13 @@ export class ChessEngine implements GameEngine<ChessInstance> {
       try {
         chess.loadPgn(serializedState);
         return chess;
-      } catch (_) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (_error) {
         console.error('Failed to load PGN:', serializedState);
         return new Chess(); // Return a new chess instance if loading fails
       }
-    } catch (_) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       console.error(
         'Error deserializing chess state:',
         'PGN:',

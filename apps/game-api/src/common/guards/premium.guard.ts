@@ -14,6 +14,12 @@ interface RequestWithUser {
   };
 }
 
+// Define a type for error objects
+interface ErrorWithMessage {
+  message: string;
+  stack?: string;
+}
+
 /**
  * Guard that checks if a user has premium or standard subscription
  * Used to protect routes that require a paid subscription
@@ -46,17 +52,17 @@ export class PremiumGuard implements CanActivate {
       }
 
       // Check subscription status against all paid tiers
-      const isPaidSubscription = 
+      const isPaidSubscription =
         user.subscriptionStatus === 'premium' ||
-        user.subscriptionStatus === 'standard' ||  // Added standard tier support
+        user.subscriptionStatus === 'standard' || // Added standard tier support
         user.subscriptionStatus === 'trial';
 
       if (!isPaidSubscription) {
         this.logger.warn(
-          `Subscription required: User ${userId} with status ${user.subscriptionStatus} attempted to access premium feature`
+          `Subscription required: User ${userId} with status ${user.subscriptionStatus} attempted to access premium feature`,
         );
         throw new UnauthorizedException(
-          'This feature requires a paid subscription'
+          'This feature requires a paid subscription',
         );
       }
 
@@ -65,9 +71,10 @@ export class PremiumGuard implements CanActivate {
       if (error instanceof UnauthorizedException) {
         throw error;
       }
+      const err = error as ErrorWithMessage;
       this.logger.error(
-        `Error checking subscription status: ${error.message}`,
-        error.stack
+        `Error checking subscription status: ${err.message}`,
+        err.stack,
       );
       throw new UnauthorizedException('Error validating subscription status');
     }

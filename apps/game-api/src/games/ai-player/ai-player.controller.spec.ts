@@ -5,6 +5,7 @@ import { AiPlayerDto } from './dto';
 
 describe('AiPlayerController', () => {
   let controller: AiPlayerController;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let service: AiPlayerService;
 
   const mockAiPlayerService = {
@@ -84,4 +85,4 @@ describe('AiPlayerController', () => {
       expect(mockAiPlayerService.findOne).toHaveBeenCalledWith('1');
     });
   });
-}); 
+});

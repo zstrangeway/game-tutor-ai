@@ -10,7 +10,7 @@ export class GetGamesDto {
   @ApiProperty({
     description: 'Filter games by type',
     enum: GameType,
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsEnum(GameType)
@@ -19,7 +19,7 @@ export class GetGamesDto {
   @ApiProperty({
     description: 'Filter games by result (e.g., "1-0", "0-1", "1/2-1/2")',
     required: false,
-    example: '1-0'
+    example: '1-0',
   })
   @IsOptional()
   @IsString()
@@ -30,7 +30,7 @@ export class GetGamesDto {
     required: false,
     minimum: 1,
     default: 1,
-    example: 1
+    example: 1,
   })
   @IsOptional()
   @Type(() => Number)
@@ -43,7 +43,7 @@ export class GetGamesDto {
     required: false,
     minimum: 1,
     default: 10,
-    example: 10
+    example: 10,
   })
   @IsOptional()
   @Type(() => Number)

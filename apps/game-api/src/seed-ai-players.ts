@@ -26,7 +26,8 @@ async function bootstrap() {
     const game = await prisma.game.create({
       data: {
         gameType: 'chess',
-        state: '[Event "?"]\n[Site "?"]\n[Date "????.??.??"]\n[Round "?"]\n[White "?"]\n[Black "?"]\n[Result "*"]\n\n*',
+        state:
+          '[Event "?"]\n[Site "?"]\n[Date "????.??.??"]\n[Round "?"]\n[White "?"]\n[Black "?"]\n[Result "*"]\n\n*',
       },
     });
 
@@ -35,11 +36,8 @@ async function bootstrap() {
     // Find an admin user or create one
     let adminId: string;
     const adminUser = await prisma.user.findFirst({
-      where: { 
-        OR: [
-          { username: 'admin' },
-          { email: 'admin@gametutor.ai' }
-        ]
+      where: {
+        OR: [{ username: 'admin' }, { email: 'admin@gametutor.ai' }],
       },
     });
 
@@ -74,7 +72,7 @@ async function bootstrap() {
 
     // Create AI players for each difficulty
     const difficulties = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
-    
+
     for (const difficulty of difficulties) {
       const aiPlayer = await prisma.gamePlayer.create({
         data: {
@@ -100,7 +98,7 @@ async function bootstrap() {
   logger.log('Seed completed successfully');
 }
 
-bootstrap().catch(err => {
+bootstrap().catch((err) => {
   console.error('Error during seeding:', err);
   process.exit(1);
-}); 
+});

@@ -1,1 +1,1 @@
-export * from './ai-player.dto'; 
+export * from './ai-player.dto';

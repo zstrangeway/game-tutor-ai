@@ -27,16 +27,21 @@
     "db:reset": "dotenv -e .env.local -- prisma migrate reset --force --skip-seed"
   },
   "dependencies": {
+    "@nestjs/cache-manager": "^3.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/platform-socket.io": "^11.0.1",
     "@nestjs/terminus": "^11.0.0",
     "@nestjs/throttler": "^5.1.2",
+    "@nestjs/websockets": "^11.0.1",
     "@prisma/client": "6.7.0",
+    "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
+    "cache-manager": "^6.4.2",
     "chess.js": "^1.2.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
@@ -46,7 +51,8 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
