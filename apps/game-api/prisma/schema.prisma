@@ -24,12 +24,15 @@ model User {
   elo                 Json                 @default("{}") // JSONB, e.g., {'chess': 800}
   preferences         Json                 @default("{}") // JSONB
   subscriptionStatus  String?
+  stripeCustomerId    String?              @unique
   gamePlayers         GamePlayer[]
   chatMessages        ChatLog[]
   verificationTokens  VerificationToken[]
   passwordResetTokens PasswordResetToken[]
   refreshTokens       RefreshToken[]
   tokenBlacklist      TokenBlacklist[]
+  subscription        Subscription?
+  paymentRecords      PaymentRecord[]
 }
 
 model Game {
@@ -65,16 +68,48 @@ model ChatLog {
   user      User?    @relation(fields: [userId], references: [id])
 }
 
+model SubscriptionPlan {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  description   String?
+  price         Float
+  interval      String // monthly, yearly, etc.
+  currency      String   @default("USD")
+  features      Json? // Array of features included in this plan
+  stripePriceId String   @unique
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model Subscription {
   id                   String    @id @default(uuid())
   userId               String    @unique
+  planName             String // Reference to plan name for simpler querying
   stripeCustomerId     String?
   stripePriceId        String?
   stripeSubscriptionId String?
-  status               String
+  status               String // active, canceled, past_due, trialing, etc.
+  currentPeriodStart   DateTime?
   currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean   @default(false)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PaymentRecord {
+  id              String   @id @default(uuid())
+  userId          String
+  subscriptionId  String?
+  amount          Float
+  currency        String   @default("USD")
+  status          String // succeeded, failed, pending
+  paymentMethod   String? // card, paypal, etc.
+  stripePaymentId String?
+  stripeInvoiceId String?
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model AnalyticsEvent {

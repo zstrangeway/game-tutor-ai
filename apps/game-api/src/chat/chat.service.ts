@@ -360,8 +360,9 @@ export class ChatService {
       }
 
       // Check subscription status for AI feedback access (Premium tier feature)
-      const subscriptionStatus =
-        await this.subscriptionService.getUserSubscriptionStatus(userId);
+      const subscriptionDetails =
+        await this.subscriptionService.getUserSubscriptionDetails(userId);
+      const subscriptionStatus = subscriptionDetails.status;
       const hasPremiumAccess =
         subscriptionStatus === 'premium' || subscriptionStatus === 'trial';
 
@@ -454,7 +455,11 @@ export class ChatService {
         isAi: true,
       });
     } catch (error) {
-      const err = error as ErrorWithMessage;
+      const err =
+        error instanceof Error
+          ? error
+          : new Error(typeof error === 'string' ? error : 'Unknown error');
+
       this.logger.error(`Error getting AI feedback: ${err.message}`, err.stack);
 
       if (

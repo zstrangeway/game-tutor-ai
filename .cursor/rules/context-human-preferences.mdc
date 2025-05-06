@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+Description: Enforces general preferences of the human operator
+---
+- Use pnpm from the root of the project when able
+- Use docker rather than pnpm dev, it will likely already be running in the background
+- Do not mock or stub out implementations unless I've specifically told you to
+- If you don't know the answer to something, say so.  Do not guess.
+- Clean up after yourself.  Don't leave a bunch of linter warnings and errors everywhere.
+- Don't leave unused or abandoned files laying around everywhere.
