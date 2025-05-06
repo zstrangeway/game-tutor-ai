@@ -22,6 +22,23 @@ services:
     networks:
       - gametutor-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - gametutor-network
+
   game-api:
     container_name: game-api
     build:
@@ -37,6 +54,8 @@ services:
       - /app/apps/game-api/node_modules
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - gametutor-network
@@ -64,6 +83,8 @@ services:
 volumes:
   postgres_data:
     name: gametutor-postgres-data
+  redis_data:
+    name: gametutor-redis-data
 
 networks:
   gametutor-network:

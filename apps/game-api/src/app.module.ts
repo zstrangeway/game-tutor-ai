@@ -18,6 +18,9 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { EmailModule } from './common/email.module';
 import { LoggerModule } from './common/logger.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { RedisModule } from './redis/redis.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -35,8 +38,12 @@ import { LoggerModule } from './common/logger.module';
       },
     ]),
 
-    // Database
+    // Task scheduling
+    ScheduleModule.forRoot(),
+
+    // Database and caching
     PrismaModule,
+    RedisModule,
 
     // Common modules
     EmailModule,
@@ -54,6 +61,7 @@ import { LoggerModule } from './common/logger.module';
 
     // Health checks
     TerminusModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [
